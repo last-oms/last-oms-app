@@ -1,0 +1,48 @@
+name: Setup nx job
+description: Install NodeJS, set shas and install dependencies.
+
+runs:
+  using: composite
+  steps:
+    # Use a temporary file to concat summaries since GitHub doesn't do it for composite actions.
+    # Last step will print its content to the $GITHUB_STEP_SUMMARY variable
+    - shell: bash
+      id: summary
+      run: |
+        echo "::set-output name=file::$(mktemp)"
+
+    - uses: nrwl/nx-set-shas@v2
+
+    - uses: volta-cli/action@v2
+
+    - shell: bash
+      id: versions
+      run: |
+        echo "::set-output name=node_version::$(node --version)"
+
+        cat <<GSS >> ${{ steps.summary.outputs.file }}
+        # Using
+        - NodeJS $(node --version)
+        - yarn $(yarn --version)
+
+        GSS
+
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      shell: bash
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+
+    - name: Use the node_modules cache if available [yarn]
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ steps.versions.outputs.node_version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-node-${{ steps.versions.outputs.node_version }}-yarn-
+
+    - shell: bash
+      run: yarn install --frozen-lockfile
+
+    - shell: bash
+      if: always()
+      run: cat ${{ steps.summary.outputs.file }} >> $GITHUB_STEP_SUMMARY

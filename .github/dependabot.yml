@@ -1,0 +1,20 @@
+version: 2
+updates:
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      # Check for updates to GitHub Actions every weekday
+      interval: 'daily'
+
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    ignore:
+      # Use migrations to update @nrwl/* updates.
+      # Run `yarn nx migrate latest` instead
+      - dependency-name: '@nrwl/*'
+      - dependency-name: 'nx'
+      # Run `yarn nx migrate @nx-plus/docusaurus` instead
+      - dependency-name: '@nx-plus/docusaurus'
+      - dependency-name: '@docusaurus/core'

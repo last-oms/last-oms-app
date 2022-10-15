@@ -1,0 +1,28 @@
+name: Deploy
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/nx-job-setup
+
+      - run: |
+          cat <<GSS >> $GITHUB_STEP_SUMMARY
+          # Deploy
+          Deploying projects: $(yarn -s nx print-affected --target=deploy --select=projects)
+          GSS
+
+          npx nx affected --target=deploy --parallel=3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
