@@ -15,6 +15,18 @@
       "options": {
         "port": 3000
       }
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "commands": [
+          "git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git",
+          "gh-pages -d docs -u \"github-actions-bot <support+actions@github.com>\" -m \"chore(docs): deploy docs changes\""
+        ],
+        "cwd": "dist/apps",
+        "parallel": false
+      }
     }
   },
   "tags": []
