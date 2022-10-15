@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunklast_oms_app=self.webpackChunklast_oms_app||[]).push([[91],{3832:s=>{s.exports=JSON.parse('{"label":"docusaurus","permalink":"/last-oms-app/blog/tags/docusaurus","allTagsPath":"/last-oms-app/blog/tags","count":4}')}}]);

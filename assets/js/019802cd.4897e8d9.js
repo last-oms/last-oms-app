@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunklast_oms_app=self.webpackChunklast_oms_app||[]).push([[930],{4100:a=>{a.exports=JSON.parse('{"label":"hola","permalink":"/last-oms-app/blog/tags/hola","allTagsPath":"/last-oms-app/blog/tags","count":1}')}}]);
