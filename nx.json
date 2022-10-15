@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "npmScope": "last-oms-app",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/nx-cloud",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
+        "accessToken": "YmYyYmI4MTItNjJmMi00ZmE5LWIwODktNjY2NmFhNDJmOTQ1fHJlYWQtd3JpdGU="
+      }
+    }
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    }
+  },
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "production": ["default"],
+    "sharedGlobals": []
+  }
+}
