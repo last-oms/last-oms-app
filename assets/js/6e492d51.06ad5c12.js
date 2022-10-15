@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunklast_oms_app=self.webpackChunklast_oms_app||[]).push([[650],{1383:s=>{s.exports=JSON.parse('{"name":"docusaurus-plugin-content-pages","id":"default"}')}}]);
