@@ -15,7 +15,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@last-oms-app/api/domain/order": ["libs/api/domain/order/src/index.ts"]
+      "@last-oms-app/api/domain/order": ["libs/api/domain/order/src/index.ts"],
+      "@last-oms-app/ext/typescript/uuid": [
+        "libs/ext/typescript/uuid/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
