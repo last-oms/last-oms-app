@@ -1,1 +1,1 @@
-export * from './lib/ext-typescript-uuid';
+export * from './lib/uuid';
