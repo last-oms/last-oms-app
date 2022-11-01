@@ -6,43 +6,32 @@ runs:
   steps:
     # Use a temporary file to concat summaries since GitHub doesn't do it for composite actions.
     # Last step will print its content to the $GITHUB_STEP_SUMMARY variable
-    - shell: bash
-      id: summary
-      run: |
-        echo "::set-output name=file::$(mktemp)"
-
-    - uses: nrwl/nx-set-shas@v2
-
-    - uses: volta-cli/action@v2
-
-    - shell: bash
-      id: versions
-      run: |
-        echo "::set-output name=node_version::$(node --version)"
-
-        cat <<GSS >> ${{ steps.summary.outputs.file }}
-        # Using
-        - NodeJS $(node --version)
-        - yarn $(yarn --version)
-
-        GSS
-
-    - name: Get yarn cache directory path
-      id: yarn-cache-dir-path
+    - name: Fetch metadata about this project (Node, PNPM version, etc...)
       shell: bash
-      run: echo "::set-output name=dir::$(yarn cache dir)"
+      id: metadata
+      run: |
+        # echo "package_manager=$([[ -f ./yarn.lock ]] && echo "yarn" || ([[ -f ./pnpm-lock.yaml ]] && echo "pnpm") || echo "npm")" >> $GITHUB_OUTPUT
+        echo "node_version=$(jq -r '.volta.node' package.json)" >> $GITHUB_OUTPUT
+        echo "pnpm_version=$(jq -r '.volta.pnpm' package.json)" >> $GITHUB_OUTPUT
 
-    - name: Use the node_modules cache if available [yarn]
-      uses: actions/cache@v2
+    - name: Derive appropriate SHAs for base and head for `nx affected` commands
+      uses: nrwl/nx-set-shas@v3
+
+    - name: Install NodeJS with Volta
+      uses: volta-cli/action@v4
+
+    - name: Install PNPM
+      if: steps.metadata.outputs.package_manager == 'pnpm'
+      uses: pnpm/action-setup@v2.2.2
       with:
-        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-        key: ${{ runner.os }}-node-${{ steps.versions.outputs.node_version }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-node-${{ steps.versions.outputs.node_version }}-yarn-
+        version: ${{ steps.metadata.outputs.pnpm_version }}
+
+    - name: Use the node_modules cache if available [pnpm]
+      uses: actions/cache@v3
+      with:
+        path: ~/.pnpm-store
+        key: ${{ runner.os }}-node-${{ steps.metadata.outputs.node_version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: ${{ runner.os }}-node-${{ steps.metadata.outputs.node_version }}-
 
     - shell: bash
-      run: yarn install --frozen-lockfile
-
-    - shell: bash
-      if: always()
-      run: cat ${{ steps.summary.outputs.file }} >> $GITHUB_STEP_SUMMARY
+      run: pnpm install --frozen-lockfile
