@@ -4,7 +4,7 @@ set -e
 
 eval "$(curl -sfLS https://import.sh)"
 
-import "confirm@0.1.1"
+import "importpw/confirm@0.1.0"
 
 bootstrap_volta() {
   echo "This script will install Volta (https://volta.sh) to manage your Node & npm versions."
@@ -17,8 +17,19 @@ bootstrap_volta() {
   curl https://get.volta.sh | bash
 }
 
+bootstrap_pnpm() {
+  echo "This script will install or update pnpm through corepack."
+  confirm "Continue? [yN]" || return 0
+
+  corepack="$(dirname $(volta which node))/corepack"
+
+  $corepack enable
+  $corepack prepare --activate pnpm@$(jq -r '.volta.pnpm' package.json)
+}
+
 main() {
   bootstrap_volta || return $?
+  bootstrap_pnpm || return $?
 }
 
 main || exit $?
