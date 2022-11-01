@@ -4,7 +4,7 @@ set -e
 
 eval "$(curl -sfLS https://import.sh)"
 
-import "confirm@0.1.1"
+import "confirm@0.1.0"
 
 bootstrap_volta() {
   echo "This script will install Volta (https://volta.sh) to manage your Node & npm versions."
