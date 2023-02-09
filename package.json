@@ -12,7 +12,7 @@
   "dependencies": {
     "@docusaurus/core": "^2.2.0",
     "@docusaurus/preset-classic": "^2.3.1",
-    "@mdx-js/react": "^1.6.21",
+    "@mdx-js/react": "^2.2.1",
     "@swc/helpers": "~0.4.14",
     "clsx": "^1.1.1",
     "prism-react-renderer": "^1.2.1",
