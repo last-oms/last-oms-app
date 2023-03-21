@@ -50,7 +50,7 @@
     "jest-environment-jsdom": "29.5.0",
     "lint-staged": "^13.2.0",
     "nx": "15.0.5",
-    "prettier": "^2.8.4",
+    "prettier": "^2.8.5",
     "prettier-plugin-sh": "^0.12.8",
     "ts-jest": "29.0.5",
     "ts-node": "10.9.1",
